@@ -2,7 +2,7 @@
 """
 Created on Wed Jun 18 20:19:53 2025
 
-@author: Dan
+@author: Dan / leadbot
 """
 
 import pandas as pd
@@ -156,9 +156,11 @@ def plot_with_sigmoid(data_dict, data_column):
         data_dict[well]['Tmindex'] = Tmindex
     return data_dict
 
-def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=None, show_sigmoid=False, ax=None, samples=None):
+def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=None, show_sigmoid=False, ax=None, samples=None,
+                     title=True, fs=12):
     handles=[]
     legend_labels=[]
+    ylabel='Fluorescence intensity (Ex 470nm/Em 570nm)'
     if ax==None:
         fig, ax = plt.subplots(figsize=(12, 6))
     if plot_type in ['raw', 'normalized']:
@@ -168,7 +170,8 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
     def rotate(l, n):
          return l[n:] + l[:n]
     palette = sns.color_palette("hls", len(labels))
-    palette=rotate(palette, -1)
+    grey=sns.xkcd_palette(["slate grey"])
+    palette=rotate(palette, -1)[:-1]+grey
     color_map = dict(zip(labels, palette))
     if plot_type in ['group error', 'normalized_group', 'raw grouped']:
         print(labels)
@@ -180,9 +183,19 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
 
             if yerr is not None:
                 lines=ax.errorbar(temp, ydata, yerr=yerr, fmt='o', capsize=3, label=str(sample),
-                             color=color_map[sample], alpha=0.9)
+                             markeredgecolor='black', markerfacecolor=color_map[sample], alpha=0.9)
+                # Set capline color (top and bottom caps)
+                for i, cap in enumerate(lines[1]):
+                    cap.set_color(color_map[sample])
+                    cap.set_alpha(1.0)  # optional
+
+    # Set vertical bar color
+                for bar in lines[2]:
+                    bar.set_color(color_map[sample])
+                    bar.set_alpha(1.0)  # optional
             else:
-                lines=ax.scatter(temp, ydata, label=str(sample), color=color_map[sample], s=20, alpha=0.9)
+                lines=ax.scatter(temp, ydata, label=str(sample), markeredgecolor='black',
+                                 markerfacecolor=color_map[sample], s=20, alpha=0.9)
             
             handles.append(lines)
             if show_sigmoid:
@@ -193,11 +206,11 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
                     if sample in samples:
                          ax.axvline(grouped_data[sample]['Tm'], color=color_map[sample], linestyle=':', alpha=0.6, lw=3)
                          ax.text(grouped_data[sample]['Tm'] + 0.3, 0.1, f"{grouped_data[sample]['Tm']:.2f}°C", 
-                                rotation=90, va='center', color=color_map[sample], size=16)
-        ax.set_ylabel('Mean Normalized Fluorescence' if plot_type == 'group error' else 'Normalized Mean Fluorescence')
+                                rotation=90, va='center', color=color_map[sample], size=12)
+        ax.set_ylabel(ylabel if plot_type == 'group error' else 'Normalized Mean Fluorescence', size=fs)
         ax.set_xlim([45, 60])
         legend_labels = [str(x) + '\u00B2\u207A' if len(str(x)) < 3 else str(x) for x in labels]
-        ax.legend(handles, legend_labels, loc='lower right', fontsize=12)
+        ax.legend(handles, legend_labels, loc='lower right', fontsize=10)
 
     else:
         if plot_type == 'raw':
@@ -209,7 +222,7 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
                     sigX=data_dict[well]['SigX_fluorescence']
                     sigY=data_dict[well]['SigY_fluorescence']
                     ax.plot(sigX, sigY, '--', color=color_map[well])
-            ax.set_ylabel('Fluorescence')
+            ax.set_ylabel(ylabel)
             
         elif plot_type == 'normalized':
            for well in labels:
@@ -220,10 +233,11 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
                     sigX=data_dict[well]['SigX_normalized']
                     sigY=data_dict[well]['SigY_normalized']
                     ax.plot(sigX, sigY, '--', color=color_map[well])
-           ax.set_ylabel('Normalized Fluorescence')
+           ax.set_ylabel(ylabel)
         
-    ax.set_xlabel('Temperature (°C)')
-    ax.set_title(f"ThermoFluor Plot: {plot_type}")
+    ax.set_xlabel('Temperature (°C)', size=fs)
+    if title:
+         ax.set_title(f"ThermoFluor Plot: {plot_type}", size=fs)
     ax.grid(True, linestyle='--', alpha=0.4)
     plt.tight_layout()
     plt.show()
