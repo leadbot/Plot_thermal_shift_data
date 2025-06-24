@@ -241,7 +241,7 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
     ax.grid(True, linestyle='--', alpha=0.4)
     plt.tight_layout()
     if save:
-        fig.savefig(f"{plot_type}_theral_shift.svg", transparent=True)
+        fig.savefig(f"{plot_type}_thermal_shift.svg", transparent=True)
     plt.show()
 
 
