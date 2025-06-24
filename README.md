@@ -9,6 +9,8 @@ plot_thermofluor(normalized_data, grouped_data, plot_type='normalized', show_sig
 plot_thermofluor(normalized_data, grouped_data, plot_type='normalized_group', show_sigmoid=True, save=True)
 plot_thermofluor(normalized_data, grouped_data, plot_type='group error', show_sigmoid=True, save=True)
 
+
+
 ![Raw data](https://raw.githubusercontent.com/leadbot/Plot_thermal_shift_data/main/raw_thermal_shift.svg)
 
 ![Normalised_group error](https://raw.githubusercontent.com/leadbot/Plot_thermal_shift_data/main/group_error_thermal_shift.svg)
