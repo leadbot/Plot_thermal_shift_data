@@ -11,7 +11,7 @@ plot_thermofluor(normalized_data, grouped_data, plot_type='group error', show_si
 
 ![Raw data](https://raw.githubusercontent.com/leadbot/Plot_thermal_shift_data/main/raw_thermal_shift.svg)
 
-![Normalised_group error](https://raw.githubusercontent.com/leadbot/Plot_thermal_shift_data/main/group error_thermal_shift.svg)
+![Normalised_group error](https://raw.githubusercontent.com/leadbot/Plot_thermal_shift_data/main/group_error_thermal_shift.svg)
 
 ![Normalised_group](https://raw.githubusercontent.com/leadbot/Plot_thermal_shift_data/main/normalized_group_thermal_shift.svg)
 
