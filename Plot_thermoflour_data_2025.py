@@ -156,8 +156,8 @@ def plot_with_sigmoid(data_dict, data_column):
         data_dict[well]['Tmindex'] = Tmindex
     return data_dict
 
-def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=None, show_sigmoid=False, ax=None, samples=None,
-                     title=True, fs=12):
+def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=None, show_sigmoid=False, ax=None, 
+                     title=True, fs=12, save=False):
     handles=[]
     legend_labels=[]
     ylabel='Fluorescence intensity (Ex 470nm/Em 570nm)'
@@ -194,8 +194,8 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
                     bar.set_color(color_map[sample])
                     bar.set_alpha(1.0)  # optional
             else:
-                lines=ax.scatter(temp, ydata, label=str(sample), markeredgecolor='black',
-                                 markerfacecolor=color_map[sample], s=20, alpha=0.9)
+                lines=ax.scatter(temp, ydata, label=str(sample), edgecolor='black',
+                                 color=color_map[sample], s=20, alpha=0.9)
             
             handles.append(lines)
             if show_sigmoid:
@@ -208,7 +208,7 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
                          ax.text(grouped_data[sample]['Tm'] + 0.3, 0.1, f"{grouped_data[sample]['Tm']:.2f}°C", 
                                 rotation=90, va='center', color=color_map[sample], size=12)
         ax.set_ylabel(ylabel if plot_type == 'group error' else 'Normalized Mean Fluorescence', size=fs)
-        ax.set_xlim([45, 60])
+        #ax.set_xlim([45, 60])
         legend_labels = [str(x) + '\u00B2\u207A' if len(str(x)) < 3 else str(x) for x in labels]
         ax.legend(handles, legend_labels, loc='lower right', fontsize=10)
 
@@ -240,6 +240,8 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
          ax.set_title(f"ThermoFluor Plot: {plot_type}", size=fs)
     ax.grid(True, linestyle='--', alpha=0.4)
     plt.tight_layout()
+    if save:
+        fig.savefig(f"{plot_type}_theral_shift.svg", transparent=True)
     plt.show()
 
 
@@ -268,8 +270,8 @@ tm_norm_grouped=plot_with_sigmoid(grouped_data, 'normalized_mean')
 
 #tm_n = 
 # For each plot type:
-plot_thermofluor(raw_data, grouped_data, plot_type='raw', show_sigmoid=True)
+plot_thermofluor(raw_data, grouped_data, plot_type='raw', show_sigmoid=True, save=True)
 plot_thermofluor(raw_grouped, grouped_data, plot_type='raw grouped', show_sigmoid=True)
 plot_thermofluor(normalized_data, grouped_data, plot_type='normalized', show_sigmoid=True)
-plot_thermofluor(normalized_data, grouped_data, plot_type='normalized_group', show_sigmoid=True)
-plot_thermofluor(normalized_data, grouped_data, plot_type='group error', show_sigmoid=True, samples=['Cu', '10mM EDTA'])
+plot_thermofluor(normalized_data, grouped_data, plot_type='normalized_group', show_sigmoid=True, save=True)
+plot_thermofluor(normalized_data, grouped_data, plot_type='group error', show_sigmoid=True, save=True)
