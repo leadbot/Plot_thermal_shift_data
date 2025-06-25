@@ -156,7 +156,7 @@ def plot_with_sigmoid(data_dict, data_column):
         data_dict[well]['Tmindex'] = Tmindex
     return data_dict
 
-def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=None, show_sigmoid=False, ax=None, 
+def plot_thermofluor(data_dict, grouped_data, plot_type='raw', samples=None, selected_samples=None, show_sigmoid=False, ax=None, 
                      title=True, fs=12, save=False):
     handles=[]
     legend_labels=[]
@@ -208,9 +208,9 @@ def plot_thermofluor(data_dict, grouped_data, plot_type='raw', selected_samples=
                          ax.text(grouped_data[sample]['Tm'] + 0.3, 0.1, f"{grouped_data[sample]['Tm']:.2f}°C", 
                                 rotation=90, va='center', color=color_map[sample], size=12)
         ax.set_ylabel(ylabel if plot_type == 'group error' else 'Normalized Mean Fluorescence', size=fs)
-        #ax.set_xlim([45, 60])
-        legend_labels = [str(x) + '\u00B2\u207A' if len(str(x)) < 3 else str(x) for x in labels]
-        ax.legend(handles, legend_labels, loc='lower right', fontsize=10)
+        ax.set_xlim([45, 60])
+        legend_labels = [f"${str(x)}^{{2+}}$" if len(str(x)) < 3 else str(x) for x in labels]
+        ax.legend(handles, legend_labels, loc='upper left', fontsize=10)
 
     else:
         if plot_type == 'raw':
